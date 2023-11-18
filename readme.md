@@ -1,6 +1,6 @@
 # Egg Missions Artifacts Visualiser
 
-This script allows you to visualise the cunmulative contents of multiple Egg, Inc. ships that returned to you.
+This script allows you to visualise the cumulative contents of multiple Egg, Inc. ships that returned to you.
 
 ## Example Image
 

@@ -6,17 +6,16 @@ from itertools import islice
 import os
 import json
 import time
-import sys
+
+
+# SET YOUR INFO HERE!
 
 EGG_API_KEY = 'EI1234567890123456' # Put your Egg, Inc. ID here
-print("Value of EGG_API_KEY from environment:", os.environ.get('EGG_API_KEY'))
+num_ships = 1 # The number of ships you want to ask the API for 
+
+
 
 ei_id = os.environ.get('EGG_API_KEY', EGG_API_KEY) # can set an environ. variable if you want, default is input above
-
-#print("All Environment Variables:", os.environ)
-print(ei_id)
-sys.exit()
-num_ships = 3 # The number of ships you want to ask the API for 
 
 # Making first contact request to API. This is to get the list of mission IDs
 first_contact_request = ei_pb2.EggIncFirstContactRequest()
