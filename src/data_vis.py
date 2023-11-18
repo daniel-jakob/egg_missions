@@ -3,7 +3,7 @@ import json
 import os
 
 with open("data.json", "r") as f:
-    artifacts_output = json.load(f)
+	artifacts_output = json.load(f)
 
 # Map from word form to number form for the "level" field
 level_mapping = {"INFERIOR": 1, "LESSER": 2, "NORMAL": 3, "GREATER": 4, "SUPERIOR": 5}
@@ -12,34 +12,26 @@ level_mapping = {"INFERIOR": 1, "LESSER": 2, "NORMAL": 3, "GREATER": 4, "SUPERIO
 rarity_order = {"COMMON": 1, "RARE": 2, "EPIC": 3, "LEGENDARY": 4}
 type_order = {"artifact": 1, "stone": 2, "ingredient": 3}
 
+fragment_level_mapping = {1: 2, 2: 3, 3: 4}
 # Convert the level field in sorted_output to number form
 # Convert the 'name' field to lowercase and the 'level' field to number form in sorted_output
 for item in artifacts_output:
 	item['name'] = item['name'].lower()
 	item['level'] = level_mapping.get(item['level'], 999)  # Using 999 as a default if level is not in the mapping
 	
-
+	# Type field creation. Used for sorting artfacts->stones->ingredients
 	item['type'] = 'stone' if 'stone' in item['name'] else 'artifact'
 	if 'solar' in item['name'] or 'meteorite' in item['name'] or 'geode' in item['name']:
 		item['type'] = 'ingredient'
 
 	#to fix level of stones and their fragments
-
-	if item['name'] == 'prophecy_stone' and item['level'] == 3: item['level'] = 4
-	if item['name'] == 'prophecy_stone' and item['level'] == 2: item['level'] = 3
-	if item['name'] == 'prophecy_stone' and item['level'] == 1: item['level'] = 2
-	
-	if item['name'] == 'clarity_stone' and item['level'] == 3: item['level'] = 4
-	if item['name'] == 'clarity_stone' and item['level'] == 2: item['level'] = 3
-	if item['name'] == 'clarity_stone' and item['level'] == 1: item['level'] = 2
-
-	if item['name'] == 'quantum_stone' and item['level'] == 3: item['level'] = 4
-	if item['name'] == 'quantum_stone' and item['level'] == 2: item['level'] = 3
-	if item['name'] == 'quantum_stone' and item['level'] == 1: item['level'] = 2
-
-	if item['name'] == 'life_stone' and item['level'] == 3: item['level'] = 4
-	if item['name'] == 'life_stone' and item['level'] == 2: item['level'] = 3
-	if item['name'] == 'life_stone' and item['level'] == 1: item['level'] = 2
+	if item['name'] in {'prophecy_stone', 'clarity_stone', 'quantum_stone', 'life_stone'}:
+		print(item['name'], item['level'] )
+		# Use get to handle cases where item_level is not present in the mapping
+		new_level = fragment_level_mapping.get(item.get('level'))
+		if new_level is not None:
+			item['level'] = new_level
+		print(item['name'], item['level'] )
 	
 	
 	item['name'] = item['name'].replace('_fragment', '')
