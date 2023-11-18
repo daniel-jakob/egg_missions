@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!src/data_vis.py
+!src/mission.py
+!LICENSE
+!readme.md
+!example_output.png
+!images/
