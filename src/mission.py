@@ -5,12 +5,15 @@ from google.protobuf.json_format import MessageToJson
 from itertools import islice
 import os
 import json
+import time
 
-EGG_API_KEY = 'EI1234567890123456' # Put your Egg, Inc. ID here
+EGG_API_KEY = 'EI12345678901234' # Put your Egg, Inc. ID here
 
 ei_id = str(os.environ.get('EGG_API_KEY', EGG_API_KEY)) # can set an environ. variable if you want, default is input above
 
-num_ships = 40 # The number of ships you want to ask the API for 
+# print(ei_id)
+
+num_ships = 1 # The number of ships you want to ask the API for 
 
 # Making first contact request to API. This is to get the list of mission IDs
 first_contact_request = ei_pb2.EggIncFirstContactRequest()
@@ -62,6 +65,9 @@ for mission_archive in islice(sorted_mission_archive, num_ships): # Taking num_s
 		"rarity": item["spec"]["rarity"]
     	}
 		artifacts_json_simple.append(simplified_item)
+	
+	# Pause for a second between API calls to avoid overloading
+	time.sleep(1)
 
 # Removing duplicate values and keeping tally of number of duplicates to place in "occurrences" field for each item
 occurrences_dict = {}
@@ -74,6 +80,9 @@ for item in artifacts_json_simple:
 # Generate the new output with occurrences
 new_output = [{'occurrences': count, **dict(key)} for key, count in occurrences_dict.items()]
 
+with open("data.json", "w") as f:
+    json.dump(new_output, f)
+
 # Uncomment to print the result
 # for item in new_output:
-#     print(item)
+# 	print(item)

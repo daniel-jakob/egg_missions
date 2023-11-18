@@ -1,125 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
+import json
 import os
 
-artifacts_output = [
-	{'occurrences': 5, 'name': 'QUANTUM_METRONOME', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 95, 'name': 'BOOK_OF_BASAN', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 31, 'name': 'AURELIAN_BROOCH', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 169, 'name': 'TAU_CETI_GEODE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 15, 'name': 'TUNGSTEN_ANKH', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 46, 'name': 'VIAL_MARTIAN_DUST', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 23, 'name': 'NEODYMIUM_MEDALLION', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 56, 'name': 'SHIP_IN_A_BOTTLE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 50, 'name': 'GOLD_METEORITE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 59, 'name': 'PROPHECY_STONE_FRAGMENT', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 35, 'name': 'DILITHIUM_MONOCLE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 14, 'name': 'BOOK_OF_BASAN', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 20, 'name': 'BEAK_OF_MIDAS', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 54, 'name': 'MERCURYS_LENS', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 80, 'name': 'TACHYON_DEFLECTOR', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 109, 'name': 'SOLAR_TITANIUM', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 63, 'name': 'CLARITY_STONE_FRAGMENT', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 7, 'name': 'THE_CHALICE', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 44, 'name': 'PHOENIX_FEATHER', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 105, 'name': 'LIGHT_OF_EGGENDIL', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 38, 'name': 'THE_CHALICE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 14, 'name': 'BEAK_OF_MIDAS', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 3, 'name': 'AURELIAN_BROOCH', 'level': 'NORMAL', 'rarity': 'EPIC'},
-	{'occurrences': 33, 'name': 'PUZZLE_CUBE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 46, 'name': 'DILITHIUM_MONOCLE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 49, 'name': 'TUNGSTEN_ANKH', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 20, 'name': 'TITANIUM_ACTUATOR', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 44, 'name': 'PHOENIX_FEATHER', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 10, 'name': 'MERCURYS_LENS', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 24, 'name': 'QUANTUM_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 61, 'name': 'LUNAR_TOTEM', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 201, 'name': 'GOLD_METEORITE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 13, 'name': 'SOUL_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 45, 'name': 'CARVED_RAINSTICK', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 48, 'name': 'INTERSTELLAR_COMPASS', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 52, 'name': 'CARVED_RAINSTICK', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 11, 'name': 'LUNAR_TOTEM', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 4, 'name': 'QUANTUM_METRONOME', 'level': 'LESSER', 'rarity': 'RARE'},
-	{'occurrences': 23, 'name': 'QUANTUM_METRONOME', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 22, 'name': 'TACHYON_DEFLECTOR', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 21, 'name': 'LIFE_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 25, 'name': 'LUNAR_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 24, 'name': 'CLARITY_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 24, 'name': 'DILITHIUM_MONOCLE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 8, 'name': 'PUZZLE_CUBE', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 42, 'name': 'NEODYMIUM_MEDALLION', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 24, 'name': 'TACHYON_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 18, 'name': 'MERCURYS_LENS', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 55, 'name': 'ORNATE_GUSSET', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 7, 'name': 'PROPHECY_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 16, 'name': 'LIGHT_OF_EGGENDIL', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 12, 'name': 'PUZZLE_CUBE', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 44, 'name': 'SHIP_IN_A_BOTTLE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 21, 'name': 'INTERSTELLAR_COMPASS', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 12, 'name': 'THE_CHALICE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 53, 'name': 'TITANIUM_ACTUATOR', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 24, 'name': 'TERRA_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 23, 'name': 'PHOENIX_FEATHER', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 55, 'name': 'BEAK_OF_MIDAS', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 11, 'name': 'LIFE_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 37, 'name': 'QUANTUM_METRONOME', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 17, 'name': 'TUNGSTEN_ANKH', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 29, 'name': 'SOLAR_TITANIUM', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 6, 'name': 'CLARITY_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 4, 'name': 'CARVED_RAINSTICK', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 37, 'name': 'QUANTUM_METRONOME', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 14, 'name': 'SHIP_IN_A_BOTTLE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 12, 'name': 'NEODYMIUM_MEDALLION', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 11, 'name': 'VIAL_MARTIAN_DUST', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 23, 'name': 'SHELL_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 57, 'name': 'DEMETERS_NECKLACE', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 23, 'name': 'THE_CHALICE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 5, 'name': 'LIGHT_OF_EGGENDIL', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 39, 'name': 'AURELIAN_BROOCH', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 14, 'name': 'TUNGSTEN_ANKH', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 24, 'name': 'DEMETERS_NECKLACE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 11, 'name': 'ORNATE_GUSSET', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 49, 'name': 'TITANIUM_ACTUATOR', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 4, 'name': 'AURELIAN_BROOCH', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 9, 'name': 'BEAK_OF_MIDAS', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 12, 'name': 'VIAL_MARTIAN_DUST', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 11, 'name': 'QUANTUM_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 1, 'name': 'QUANTUM_METRONOME', 'level': 'NORMAL', 'rarity': 'EPIC'},
-	{'occurrences': 2, 'name': 'TUNGSTEN_ANKH', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 4, 'name': 'INTERSTELLAR_COMPASS', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 2, 'name': 'SHELL_STONE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 5, 'name': 'MERCURYS_LENS', 'level': 'LESSER', 'rarity': 'RARE'},
-	{'occurrences': 9, 'name': 'TERRA_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 4, 'name': 'THE_CHALICE', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 4, 'name': 'LIGHT_OF_EGGENDIL', 'level': 'LESSER', 'rarity': 'RARE'},
-	{'occurrences': 13, 'name': 'TAU_CETI_GEODE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 1, 'name': 'THE_CHALICE', 'level': 'NORMAL', 'rarity': 'EPIC'},
-	{'occurrences': 3, 'name': 'TITANIUM_ACTUATOR', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 12, 'name': 'DILITHIUM_STONE', 'level': 'LESSER', 'rarity': 'COMMON'},
-	{'occurrences': 4, 'name': 'ORNATE_GUSSET', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 6, 'name': 'PHOENIX_FEATHER', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 3, 'name': 'DEMETERS_NECKLACE', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 12, 'name': 'DILITHIUM_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 10, 'name': 'ORNATE_GUSSET', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 5, 'name': 'SOUL_STONE', 'level': 'INFERIOR', 'rarity': 'COMMON'},
-	{'occurrences': 1, 'name': 'NEODYMIUM_MEDALLION', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 2, 'name': 'PUZZLE_CUBE', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 4, 'name': 'INTERSTELLAR_COMPASS', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 1, 'name': 'THE_CHALICE', 'level': 'GREATER', 'rarity': 'EPIC'},
-	{'occurrences': 3, 'name': 'AURELIAN_BROOCH', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 3, 'name': 'TUNGSTEN_ANKH', 'level': 'LESSER', 'rarity': 'RARE'},
-	{'occurrences': 2, 'name': 'DEMETERS_NECKLACE', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 2, 'name': 'NEODYMIUM_MEDALLION', 'level': 'LESSER', 'rarity': 'RARE'},
-	{'occurrences': 3, 'name': 'LUNAR_TOTEM', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 3, 'name': 'SHIP_IN_A_BOTTLE', 'level': 'NORMAL', 'rarity': 'RARE'},
-	{'occurrences': 1, 'name': 'QUANTUM_METRONOME', 'level': 'GREATER', 'rarity': 'COMMON'},
-	{'occurrences': 2, 'name': 'LUNAR_STONE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-	{'occurrences': 1, 'name': 'INTERSTELLAR_COMPASS', 'level': 'GREATER', 'rarity': 'RARE'},
-	{'occurrences': 1, 'name': 'LUNAR_TOTEM', 'level': 'GREATER', 'rarity': 'EPIC'},
-	{'occurrences': 1, 'name': 'NEODYMIUM_MEDALLION', 'level': 'NORMAL', 'rarity': 'EPIC'},
-	{'occurrences': 1, 'name': 'THE_CHALICE', 'level': 'LESSER', 'rarity': 'EPIC'},
-	{'occurrences': 1, 'name': 'SOUL_STONE', 'level': 'NORMAL', 'rarity': 'COMMON'},
-]
+with open("data.json", "r") as f:
+    artifacts_output = json.load(f)
 
 # Map from word form to number form for the "level" field
 level_mapping = {"INFERIOR": 1, "LESSER": 2, "NORMAL": 3, "GREATER": 4, "SUPERIOR": 5}
@@ -177,9 +61,9 @@ for item in sorted_output:
 
 #sys.exit()
 
-images_folder = "book/"
+images_folder = "images/"
 
-# Assuming each image is a square of size 100x100 pixels
+# Assuming each image is a square of size 
 image_size = (128, 128)
 
 # Define colors for the circles based on rarity
@@ -224,7 +108,9 @@ for i, item in enumerate(sorted_output):
 	col = i % images_per_row
 	row = i // images_per_row
 	position = (col * image_size[0], row * image_size[1])
-	
+
+
+	# If rare, epic, legendary, put coloured circle behind artifact image
 	if item['rarity'] != "COMMON":
 		circle_color = circle_colors.get(item['rarity'])
 		# Calculate the center and radius of the ellipse
@@ -232,14 +118,14 @@ for i, item in enumerate(sorted_output):
 		center_y = (position[1] * 2 + image_size[1]) // 2
 		radius = min(image_size) // 2.25  # Use the minimum of width and height as the radius
 
-		#print(position[0], position[0], image_size[0])
 
 		# Draw the ellipse with the specified radius
 		draw.ellipse([center_x - radius, center_y - radius, center_x + radius, center_y + radius], fill=circle_color)
 
-	# Paste the image onto the final image
+	# Paste the image onto the final image, preserving the transparacny
 	final_image.paste(img, position, mask=img)
 
+	# Grey circle with number of occurrences in bottom left
 	if item['occurrences'] > 1:
 		circle_color = (156, 163, 175)
 		# Calculate the center and radius of the ellipse
@@ -250,7 +136,6 @@ for i, item in enumerate(sorted_output):
 		# Draw the ellipse with the specified radius
 		draw.ellipse([center_x - radius, center_y - radius, center_x + radius, center_y + radius], fill=circle_color)
 
-		#text_size = draw.textsize(str(item['occurrences']), font=font)
 
 		draw.text([center_x, center_y], str(item['occurrences']), anchor="mm", font=font, fill="black")
 
