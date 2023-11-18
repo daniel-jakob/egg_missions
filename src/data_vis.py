@@ -9,8 +9,7 @@ with open("data.json", "r") as f:
 level_mapping = {"INFERIOR": 1, "LESSER": 2, "NORMAL": 3, "GREATER": 4, "SUPERIOR": 5}
 
 # Define custom sorting orders
-rarity_order = {"COMMON": 3, "RARE": 2, "EPIC": 1, "LEGENDARY": 0}
-level_order = {"INFERIOR": 4, "LESSER": 3, "NORMAL": 2, "GREATER": 1, "SUPERIOR": 0}
+rarity_order = {"COMMON": 1, "RARE": 2, "EPIC": 3, "LEGENDARY": 4}
 type_order = {"artifact": 1, "stone": 2, "ingredient": 3}
 
 # Convert the level field in sorted_output to number form
@@ -19,11 +18,7 @@ for item in artifacts_output:
 	item['name'] = item['name'].lower()
 	item['level'] = level_mapping.get(item['level'], 999)  # Using 999 as a default if level is not in the mapping
 	
-	# Rename 'neodymium' to 'neo'
-	if 'neodymium' in item['name']:
-		item['name'] = 'neo_medallion'
-	if 'light_of_eggendil' in item['name']:
-		item['name'] = 'light_eggendil'
+
 	item['type'] = 'stone' if 'stone' in item['name'] else 'artifact'
 	if 'solar' in item['name'] or 'meteorite' in item['name'] or 'geode' in item['name']:
 		item['type'] = 'ingredient'
@@ -37,18 +32,25 @@ for item in artifacts_output:
 	if item['name'] == 'clarity_stone' and item['level'] == 3: item['level'] = 4
 	if item['name'] == 'clarity_stone' and item['level'] == 2: item['level'] = 3
 	if item['name'] == 'clarity_stone' and item['level'] == 1: item['level'] = 2
-	
-	
 
+	if item['name'] == 'quantum_stone' and item['level'] == 3: item['level'] = 4
+	if item['name'] == 'quantum_stone' and item['level'] == 2: item['level'] = 3
+	if item['name'] == 'quantum_stone' and item['level'] == 1: item['level'] = 2
+
+	if item['name'] == 'life_stone' and item['level'] == 3: item['level'] = 4
+	if item['name'] == 'life_stone' and item['level'] == 2: item['level'] = 3
+	if item['name'] == 'life_stone' and item['level'] == 1: item['level'] = 2
+	
+	
 	item['name'] = item['name'].replace('_fragment', '')
 
 # Define a custom sorting key function
 def custom_sort(item):
 	return (
 		type_order.get(item['type'], float('inf')),  # Sort by type
-		rarity_order.get(item['rarity'], float('inf')),  # Sort by rarity
+		-rarity_order.get(item['rarity'], float('inf')),  # Sort by rarity (reversed)
 		item['name'],  # Then sort by name
-		-item['level']  # Finally, sort by level
+		-item['level']  # Finally, sort by level (reversed)
 	)
 
 # Sort the list using the custom sorting key
@@ -56,10 +58,8 @@ sorted_output = sorted(artifacts_output, key=custom_sort)
 
 
 # Print the sorted result
-for item in sorted_output:
-	print(item)
-
-#sys.exit()
+# for item in sorted_output:
+# 	print(item)
 
 images_folder = "images/"
 
@@ -125,7 +125,7 @@ for i, item in enumerate(sorted_output):
 	# Paste the image onto the final image, preserving the transparacny
 	final_image.paste(img, position, mask=img)
 
-	# Grey circle with number of occurrences in bottom left
+	# Grey circle with number of occurrences in bottom right
 	if item['occurrences'] > 1:
 		circle_color = (156, 163, 175)
 		# Calculate the center and radius of the ellipse

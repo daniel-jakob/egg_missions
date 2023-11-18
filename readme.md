@@ -18,6 +18,8 @@ cd egg_missions/src
 curl -O -L https://raw.githubusercontent.com/elgranjero/EggIncProtos/main/ei/python/ei_pb2.py
 ```
 
+You may need to install some of the dependencies (`protobuf`, `requests`, `pillow`, etc.)
+
 ## Usage
 
 First open up `mission.py` and put your Egg, Inc. user ID in the `EGG_API_KEY` variable. Then change the `num_ships` variable to the number of ships' contents you want to visualise.
