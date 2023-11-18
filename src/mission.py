@@ -12,7 +12,7 @@ import sys
 # SET YOUR INFO HERE!
 
 EGG_API_KEY = 'EI1234567890123456' # Put your Egg, Inc. ID here
-num_ships = 13 # The number of ships you want to ask the API for 
+num_ships = 1 # The number of ships you want to ask the API for 
 
 # If wanting to visualise a specific type of ship 
 # ['one', 'nine', 'heavy', 'bcr', 'quintillion', 'cornish', 'galeggtica', 'defihent', 'voyegger', 'henerprise']

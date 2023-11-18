@@ -26,12 +26,10 @@ for item in artifacts_output:
 
 	#to fix level of stones and their fragments
 	if item['name'] in {'prophecy_stone', 'clarity_stone', 'quantum_stone', 'life_stone'}:
-		print(item['name'], item['level'] )
 		# Use get to handle cases where item_level is not present in the mapping
 		new_level = fragment_level_mapping.get(item.get('level'))
 		if new_level is not None:
 			item['level'] = new_level
-		print(item['name'], item['level'] )
 	
 	
 	item['name'] = item['name'].replace('_fragment', '')
