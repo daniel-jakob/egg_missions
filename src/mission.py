@@ -6,7 +6,6 @@ from itertools import islice
 import os
 import json
 import time 
-import sys
 
 
 # SET YOUR INFO HERE!
