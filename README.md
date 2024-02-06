@@ -16,9 +16,8 @@ This script allows you to visualise the cumulative contents of multiple Egg, Inc
 git clone https://github.com/daniel-jakob/egg_missions
 cd egg_missions/src
 curl -O -L https://raw.githubusercontent.com/elgranjero/EggIncProtos/main/ei/python/ei_pb2.py
+pip install -r requirements.txt
 ```
-
-You may need to install some of the dependencies (`protobuf`, `requests`, `pillow`, etc.)
 
 ## Usage
 
